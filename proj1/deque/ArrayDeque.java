@@ -1,6 +1,8 @@
 package deque;
 
- public class ArrayDeque<Item> {
+import java.util.Iterator;
+
+public class ArrayDeque<Item> implements Iterable<Item>{
 
     int size;
     int nextFirst;
@@ -91,6 +93,52 @@ package deque;
          }else{
              return false;
          }
+     }
+
+     public  Iterator<Item> iterator(){
+        return new ArrayDeuqeIterator();
+     }
+
+     private class ArrayDeuqeIterator implements Iterator<Item> {
+        private int wizPos;
+
+        public ArrayDeuqeIterator(){
+            wizPos = (nextFirst + 1) % items.length;
+        }
+
+        public boolean hasNext(){
+            return wizPos != nextLast;
+        }
+
+        public Item next(){
+            Item returnItem = items[wizPos];
+            wizPos = (nextFirst + 1) % items.length;
+            return returnItem;
+
+        }
+
+         }
+     public Item getFirst(){
+        return get((nextFirst + 1) % items.length);
+     }
+
+     @Override
+     public boolean equals(Object o){
+        if (o instanceof ArrayDeque oas) {
+            if (oas.size() != this.size()) {
+                return false;
+            }
+            Iterator<Item> oasIter = oas.iterator();
+            Iterator<Item> thisIter = this.iterator();
+            while (oasIter.hasNext()) {
+
+                if (!(oasIter.next() == thisIter.next())) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
      }
 
      public static void main(String[] args) {
