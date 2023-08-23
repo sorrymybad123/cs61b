@@ -1,24 +1,28 @@
 package deque;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
-public class ArrayDeque<Item> implements Iterable<Item>{
+import static java.lang.Math.round;
+import static org.junit.Assert.assertEquals;
+
+public class ArrayDeque<Item> implements Iterable<Item> {
 
     int size;
     int nextFirst;
     Item[] items;
     int nextLast;
 
-    public ArrayDeque(){
+    public ArrayDeque() {
         nextFirst = 4;
         items = (Item[]) new Object[8];
         nextLast = 5;
         size = 0;
     }
 
-    public void addLast(Item i){
-        if (size == items.length){
-            resize(2 * items.length);
+    public void addLast(Item i) {
+        if (this.size >= items.length) {
+            this.resize(2 * items.length);
         }
         items[nextLast] = i;
         size += 1;
@@ -26,104 +30,116 @@ public class ArrayDeque<Item> implements Iterable<Item>{
     }
 
 
-    public void addFirst(Item i){
-        if (size == items.length){
-            resize(2 * items.length);
+    public void addFirst(Item i) {
+        if (this.size >= items.length) {
+            this.resize(2 * items.length);
         }
         items[nextFirst] = i;
         nextFirst = nextFirst - 1;
-        if (nextFirst < 0){
+        if (nextFirst < 0) {
             nextFirst = items.length - 1;
         }
         size += 1;
     }
 
 
-
-
-    public Item get(int index){
+    public Item get(int index) {
         return items[index];
     }
 
 
-
-    private void resize(int capacity){
+    private void resize(int capacity) {
         Item[] a = (Item[]) new Object[capacity];
         int j = 0;
-        for(int i = nextLast; i%items.length > nextFirst;i++){
-            a[j] = get(i);
+        //make all the old values move to the new array
+        Iterator<Item> itemIterator = this.iterator();
+        while (itemIterator.hasNext()) {
+            a[j] = itemIterator.next();
             j++;
         }
+        items = a;
+        //set the nextFirst value as last.
         nextFirst = items.length - 1;
-        nextLast = j + 1;
+        nextLast = j;
     }
 
-     public Item removeFirst() {
-        int index = nextFirst + 1;
-        Item whatever = items[index];
-        nextFirst += 1;
-        items[index] = null;
-        size -= 1;
-        if (size < items.length / 4 && size > 16){
-            resize(items.length / 2);
+
+    public Item removeFirst() {
+        if (!this.isEmpty()) {
+            nextFirst = (nextFirst + 1) % items.length;
+            Item whatever = items[nextFirst];
+            items[nextFirst] = null;
+            size -= 1;
+            if (size < items.length / 4 && size > 16) {
+                resize(round(items.length / 2));
+            }
+            return whatever;
         }
-        return whatever;
-     }
-
-     public Item removeLast(){
-        nextLast = nextLast - 1;
-        Item whatever = items[nextLast];
-        items[nextLast] = null;
-        size -= 1;
-         if (size < items.length / 4 && size > 16){
-             resize(items.length / 2);
-         }
-         return whatever;
-     }
+        return null;
+    }
 
 
-     public int size(){
+    public Item removeLast() {
+        if (!this.isEmpty()) {
+            nextLast = nextLast - 1;
+            Item whatever = items[nextLast];
+            items[nextLast] = null;
+            size -= 1;
+            if (size < items.length / 4 && size > 16) {
+                resize(round(items.length / 2));
+            }
+            return whatever;
+        }
+        return null;
+
+    }
+
+
+    public int size() {
         return size;
-     }
+    }
 
 
-     public boolean isEmpty(){
-         if (size == 0){
-             return true;
-         }else{
-             return false;
-         }
-     }
+    public boolean isEmpty() {
+        if (size == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-     public  Iterator<Item> iterator(){
+    public Iterator<Item> iterator() {
         return new ArrayDeuqeIterator();
-     }
+    }
 
-     private class ArrayDeuqeIterator implements Iterator<Item> {
+    private class ArrayDeuqeIterator implements Iterator<Item> {
         private int wizPos;
+        private int insideSize;
 
-        public ArrayDeuqeIterator(){
+        public ArrayDeuqeIterator() {
             wizPos = (nextFirst + 1) % items.length;
+            insideSize = size;
         }
 
-        public boolean hasNext(){
-            return wizPos != nextLast;
+        public boolean hasNext() {
+            return insideSize > 0;
         }
 
-        public Item next(){
+        public Item next() {
             Item returnItem = items[wizPos];
-            wizPos = (nextFirst + 1) % items.length;
+            wizPos = (wizPos + 1) % items.length;
+            insideSize -= 1;
             return returnItem;
-
         }
 
-         }
-     public Item getFirst(){
-        return get((nextFirst + 1) % items.length);
-     }
+    }
 
-     @Override
-     public boolean equals(Object o){
+    public Item getFirst() {
+        return get((nextFirst + 1) % items.length);
+    }
+
+    @Override
+    public boolean equals(Object o) {
         if (o instanceof ArrayDeque oas) {
             if (oas.size() != this.size()) {
                 return false;
@@ -139,20 +155,31 @@ public class ArrayDeque<Item> implements Iterable<Item>{
             }
         }
         return false;
-     }
+    }
 
-     public static void main(String[] args) {
+    public static void main(String[] args) {
         ArrayDeque<String> a = new ArrayDeque<>();
+        ArrayDeque<String> b = new ArrayDeque<>();
+        b.addFirst("a");
+        boolean ab1 = a.equals(b);
         a.addFirst("a");
+        boolean ab2 = a.equals(b);
         a.addFirst("b");
         a.addFirst("b");
         a.addFirst("b");
         a.addFirst("b");
         a.addFirst("b");
         a.addLast("c");
-        a.removeFirst();
-        a.removeLast();
-
-
-     }
- }
+        ArrayDeque<Integer> Ad1 = new ArrayDeque<>();
+        Ad1.addFirst(2);
+        Ad1.addFirst(1);
+        Ad1.addLast(3);
+        Iterator<Integer> Ad1Iterator = Ad1.iterator();
+        int i = 1;
+        while (Ad1Iterator.hasNext()) {
+            int j = Ad1Iterator.next();
+            assertEquals(i, j);
+            i++;
+        }
+    }
+}

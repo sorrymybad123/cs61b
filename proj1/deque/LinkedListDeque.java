@@ -109,6 +109,17 @@ public class LinkedListDeque<Item> {
          return size;
      }
 
+     public void printDeque(){
+         for (int i = 0; i < size; i++){
+             if (i == size){
+                 System.out.print(get(i));
+             }else{
+                 System.out.print(get(i) + " -> ");
+             }
+         }
+         System.out.println();
+     }
+
 
 
 
