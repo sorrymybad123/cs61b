@@ -2,8 +2,6 @@ package deque;
 
 import java.util.Comparator;
 
-import static java.lang.Math.round;
-import static org.junit.Assert.assertEquals;
 
 public class MaxArrayDeque<Item> extends ArrayDeque<Item>  {
 
