@@ -115,6 +115,18 @@ public class ArrayDequeTest {
             i++;
         }
     }
+
+    @Test
+    public void getTest(){
+        ArrayDeque<Integer> Ad1 = new ArrayDeque<>();
+        Ad1.addFirst(2);
+        Ad1.addFirst(1);
+        Ad1.addLast(3);
+        int a = Ad1.getFirst();
+        int c = Ad1.getLast();
+        assertEquals(1, a);
+        assertEquals(3, c);
+    }
     @Test
     /* Add large number of elements to deque; check if order is correct. */
     public void bigLLDequeTest() {

@@ -1,6 +1,39 @@
 package deque;
 
-public class LinkedListDeque<Item> {
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class LinkedListDeque<Item> implements Iterable<Item>, Deque<Item> {
+    @Override
+    public Iterator<Item> iterator() {
+        return new LinkedListIterator();
+    }
+
+
+    private class LinkedListIterator implements Iterator<Item> {
+
+        ItemNode p;
+        public LinkedListIterator(){
+            this.p = sentinel;
+        }
+        @Override
+        public boolean hasNext() {
+            if (p.next.item == null){
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public Item next() {
+            Item returnItem = p.next.item;
+            p = p.next;
+            return returnItem;
+        }
+    }
+
     //创建双链表的node
      private class ItemNode{
          //双向链表的实例对象
@@ -35,13 +68,6 @@ public class LinkedListDeque<Item> {
          size = 1;
      }
 
-     public boolean isEmpty(){
-         if (size == 0){
-             return true;
-         }else{
-             return false;
-         }
-     }
      //添加到第一个
      public void addFirst(Item x){
         sentinel.next = new ItemNode(sentinel, x, sentinel.next);
@@ -57,7 +83,9 @@ public class LinkedListDeque<Item> {
          size += 1;
      }
 
-     public Item removeFirst(){
+
+
+    public Item removeFirst(){
              ItemNode temp = sentinel.next;
              sentinel.next = temp.next;
              sentinel.next.prev = sentinel;
@@ -102,6 +130,7 @@ public class LinkedListDeque<Item> {
          }
     }
 
+
      public Item getRecursive(int index){
          return getRecursivehelper(index, sentinel.next);
      }
@@ -109,18 +138,29 @@ public class LinkedListDeque<Item> {
          return size;
      }
 
+    @Override
+    public String toString(){
+        List<String> listofItems = new ArrayList<>();
+        for (Item x : this){
+            listofItems.add(x.toString());
+        }
+        return "{" + String.join(",", listofItems) + "}";
+    }
+
+
      public void printDeque(){
-         for (int i = 0; i < size; i++){
-             if (i == size){
-                 System.out.print(get(i));
-             }else{
-                 System.out.print(get(i) + " -> ");
-             }
-         }
-         System.out.println();
+          System.out.println(this);
      }
 
-
+    public static void main(String[] args) {
+        LinkedListDeque<Integer> ld = new LinkedListDeque<>();
+        ld.addLast(1);
+        ld.addLast(2);
+        ld.addLast(3);
+        ld.addLast(null);
+        ld.addFirst(4);
+        ld.printDeque();
+    }
 
 
 }
