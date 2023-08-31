@@ -66,14 +66,7 @@ If the MaxArrayDeque is empty, simply return null.*/
         }
         return returnArray;
     }
-   public static void main(String[] args) {
-        MaxArrayDeque<Integer> MAQ = new MaxArrayDeque(MaxArrayDeque.getNumberComparator());
-        System.out.println(MAQ.max());
-        MaxArrayDeque<String> MAQ2 = MaxArrayDeque.of(MaxArrayDeque.getNameComparator(), "z", "e", "f");
-        System.out.println(MAQ2.max());
 
-
-   }
 
 }
 

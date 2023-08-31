@@ -143,23 +143,7 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
         return this.items[index];
     }
 
-    public boolean equals(Object o) {
-        if (o instanceof ArrayDeque oas) {
-            if (oas.size() != this.size()) {
-                return false;
-            }
-            Iterator<Item> oasIter = oas.iterator();
-            Iterator<Item> thisIter = this.iterator();
-            while (oasIter.hasNext()) {
 
-                if (!(oasIter.next() == thisIter.next())) {
-                    return false;
-                }
-                return true;
-            }
-        }
-        return false;
-    }
 
     @Override
     public String toString(){
@@ -180,25 +164,5 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
             returnSet.addLast(x);
         }
         return returnSet;
-    }
-
-    public static void main(String[] args) {
-        ArrayDeque<String> a = new ArrayDeque<>();
-        ArrayDeque<String> b = new ArrayDeque<>();
-        b.addFirst("a");
-        boolean ab1 = a.equals(b);
-        a.addFirst("a");
-        boolean ab2 = a.equals(b);
-        a.addFirst("b");
-        a.addFirst("b");
-        a.addFirst("b");
-        a.addFirst("b");
-        a.addFirst("b");
-        a.addLast("c");
-        ArrayDeque<String> Ad1 = ArrayDeque.of("I", "'m", "here");
-        Ad1.printDeque();
-
-
-
     }
 }
