@@ -150,15 +150,7 @@ public class LinkedListDeque<Item> implements Iterable<Item>, Deque<Item> {
           System.out.println(this);
      }
 
-    public static void main(String[] args) {
-        LinkedListDeque<Integer> ld = new LinkedListDeque<>();
-        ld.addLast(1);
-        ld.addLast(2);
-        ld.addLast(3);
-        ld.addLast(null);
-        ld.addFirst(4);
-        ld.printDeque();
-    }
+
 
 
 }
