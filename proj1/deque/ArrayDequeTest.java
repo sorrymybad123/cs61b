@@ -146,4 +146,23 @@ public class ArrayDequeTest {
         }
 
     }
+
+    @Test
+    public void testEquel() {
+        ArrayDeque<Integer> ad1 = ArrayDeque.of(3, 4, 1, 2, 3);
+        ArrayDeque<Integer> ad2 = ArrayDeque.of(3, 4, 1, 2, 3);
+        ArrayDeque<Integer> ad3 = ArrayDeque.of(3, 4, 2, 2, 3);
+        assertEquals(true, ad1.equals(ad2));
+        assertEquals(false, ad1.equals(ad3));
+        // test the null deque
+        ArrayDeque<String> a = new ArrayDeque<>();
+        ArrayDeque<String> b = new ArrayDeque<>();
+        assertEquals(true, a.equals(b));
+
+
+
+
+
+
+    }
 }

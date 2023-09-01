@@ -1,7 +1,5 @@
 package gh2;
 
-// TODO: uncomment the following import once you're ready to start this portion
-import deque.ArrayDeque;
 import deque.Deque;
 import deque.LinkedListDeque;
 
@@ -22,7 +20,7 @@ public class GuitarString {
         //       better accuracy, use the Math.round() function before casting.
         //       Your should initially fill your buffer array with zeros.
         int capacity = (int) Math.round(SR / frequency);
-        for (int i = 0; i < capacity; i++){
+        for (int i = 0; i < capacity; i++) {
             buffer.addLast(0.0);
         }
 
@@ -41,7 +39,7 @@ public class GuitarString {
         double r;
         int size = buffer.size();
         Deque<Double> replaceDeque = new LinkedListDeque<>();
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             r = Math.random() - 0.5;
             replaceDeque.addLast(r);
         }
