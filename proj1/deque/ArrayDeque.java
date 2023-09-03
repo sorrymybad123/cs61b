@@ -113,9 +113,11 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
 
 
 
+    @Override
     public Iterator<T> iterator() {
         return new ArrayDeuqeIterator();
     }
+
 
     private class ArrayDeuqeIterator implements Iterator<T> {
         private int wizPos;
