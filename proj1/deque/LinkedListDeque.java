@@ -14,8 +14,8 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         if (o == this) {
             return true;
         }
-        if (o instanceof LinkedListDeque) {
-            LinkedListDeque<?> oas = (LinkedListDeque) o;
+        if (o instanceof LinkedListDeque<?>) {
+            LinkedListDeque<?> oas = (LinkedListDeque<?>) o;
             if (oas.size() != this.size) {
                 return false;
             }
@@ -38,20 +38,17 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
     private class LinkedListIterator implements Iterator<T> {
 
         TNode p;
-        public LinkedListIterator() {
-            this.p = sentinel;
+        LinkedListIterator() {
+            this.p = sentinel.next;
         }
         @Override
         public boolean hasNext() {
-            if (p.next.item == null) {
-                return false;
-            }
-            return true;
+            return p != sentinel;
         }
 
         @Override
         public T next() {
-            T returnT = p.next.item;
+            T returnT = p.item;
             p = p.next;
             return returnT;
         }
@@ -64,7 +61,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         private T item;
         private TNode next;
 
-        public TNode(TNode prev, T i, TNode next) {
+        TNode(TNode prev, T i, TNode next) {
             this.prev = prev;
             item = i;
             this.next = next;
@@ -130,7 +127,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
             }
             return temp.item;
         } else {
-            return null;
+            throw new IndexOutOfBoundsException();
         }
     }
 

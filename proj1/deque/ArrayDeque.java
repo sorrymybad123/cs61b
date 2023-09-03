@@ -117,7 +117,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
         private int wizPos;
         private int insideSize;
 
-        public ArrayDeuqeIterator() {
+        ArrayDeuqeIterator() {
             wizPos = (nextFirst + 1) % items.length;
             insideSize = size;
         }
@@ -139,13 +139,13 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
 
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         //检查地址是否相同
         if (o == this) {
             return true; // 同一个对象
         }
         // 检查o的类型是否为ArrayDeque
-        if (o instanceof ArrayDeque) {
+        if (o instanceof ArrayDeque<?>) { // 是否有相同的泛型类型
             ArrayDeque<?> oas = (ArrayDeque<?>) o;
             // 检查两个对象的大小是否相等
             if (oas.size != this.size) {
@@ -157,7 +157,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
             while (thisIterator.hasNext() && otherIterator.hasNext()) {
                 T thisItem = thisIterator.next();
                 Object otherItem = otherIterator.next();
-                if (!(Objects.equals(thisItem, otherItem))){
+                if (!(Objects.equals(thisItem, otherItem))) {
                     return false;
                 }
             }
