@@ -151,8 +151,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
             return true; // 同一个对象
         }
         // 检查o的类型是否为ArrayDeque
-        if (o instanceof Deque<?>) { // 是否有相同的泛型类型
-            Deque<?> oas = (Deque<?>) o;
+        if (o instanceof Deque<?> oas)  { // 是否有相同的泛型类型
             // 检查两个对象的大小是否相等
             if (oas.size() != this.size()) {
                 return false;

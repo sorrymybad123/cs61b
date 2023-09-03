@@ -14,8 +14,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         if (o == this) {
             return true;
         }
-        if (o instanceof Deque<?>) {
-            Deque<?> oas = (Deque<?>) o;
+        if (o instanceof Deque<?> oas) {
             if (oas.size() != this.size()) {
                 return false;
             }
@@ -120,6 +119,9 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
 
 
     public T get(int i) {
+        if (i < 0 && i >= size) {
+            throw new IndexOutOfBoundsException();
+        }
         TNode temp = sentinel.next;
         if (i < size) {
             for (int num = 0; num < i; num++) {
