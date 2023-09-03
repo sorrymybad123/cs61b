@@ -14,9 +14,9 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         if (o == this) {
             return true;
         }
-        if (o instanceof LinkedListDeque<?>) {
-            LinkedListDeque<?> oas = (LinkedListDeque<?>) o;
-            if (oas.size() != this.size) {
+        if (o instanceof Deque<?>) {
+            Deque<?> oas = (Deque<?>) o;
+            if (oas.size() != this.size()) {
                 return false;
             }
             Iterator<T> thisIterator = this.iterator();

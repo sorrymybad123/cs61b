@@ -48,6 +48,10 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
 
 
     public T get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+
+        }
         return items[(index + nextFirst + 1) % items.length];
     }
 
@@ -145,10 +149,10 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
             return true; // 同一个对象
         }
         // 检查o的类型是否为ArrayDeque
-        if (o instanceof ArrayDeque<?>) { // 是否有相同的泛型类型
-            ArrayDeque<?> oas = (ArrayDeque<?>) o;
+        if (o instanceof Deque<?>) { // 是否有相同的泛型类型
+            Deque<?> oas = (Deque<?>) o;
             // 检查两个对象的大小是否相等
-            if (oas.size != this.size) {
+            if (oas.size() != this.size()) {
                 return false;
             }
             // 按顺序检查所有值相等
