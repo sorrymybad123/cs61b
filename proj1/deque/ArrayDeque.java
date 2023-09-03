@@ -6,10 +6,10 @@ import static java.lang.Math.round;
 
 public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
 
-    int size;
-    int nextFirst;
-    T[] items;
-    int nextLast;
+    private int size;
+    private int nextFirst;
+    private T[] items;
+    private int nextLast;
     private static int startNumber = 4;
     private static int endNumber = 5;
 
@@ -74,7 +74,8 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
             T whatever = items[nextFirst];
             items[nextFirst] = null;
             size -= 1;
-            if (size < items.length / 4 && size > 16) {
+            // resize down after remove
+            if (size <= items.length / 4 && items.length >= 16) {
                 resize(round(items.length / 2));
             }
             return whatever;
@@ -91,7 +92,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
             T whatever = items[nextLast];
             items[nextLast] = null;
             size -= 1;
-            if (size < items.length / 4 && size > 16) {
+            if (size <= items.length / 4 && items.length >= 16) {
                 resize(round(items.length / 2));
             }
             return whatever;
@@ -134,23 +135,13 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
 
     }
 
-    public T getFirst() {
-        return get(0);
-    }
 
-    public T getLast() {
-        int index = nextLast - 1;
-        if (index < 0) {
-            index = items.length - 1;
-        }
-        return this.items[index];
-    }
 
     @Override
     public boolean equals(Object o){
         // 检查o的类型是否为ArrayDeque
         if (o instanceof ArrayDeque){
-            ArrayDeque oas = (ArrayDeque) o;
+            ArrayDeque<T> oas = (ArrayDeque) o;
             // 检查两个对象的大小是否相等
             if (oas.size != this.size) {
                 return false;
@@ -168,24 +159,22 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
 
 
 
-    @Override
-    public String toString() {
-        ArrayDeque<String> listofTs = new ArrayDeque<>();
-        for (T x : this) {
-            listofTs.addLast(x.toString());
-        }
-        return "{" + String.join(",", listofTs) + "}";
-    }
+
 
     public void printDeque() {
         System.out.println(this.toString());
     }
 
-    public static <T> ArrayDeque <T> of(T... stuff) {
-        ArrayDeque<T> returnSet = new ArrayDeque<>();
-        for (T x : stuff) {
-            returnSet.addLast(x);
+    public static void main(String[] args) {
+        ArrayDeque<Integer> a = new ArrayDeque<>();
+        for (int i = 0; i < 17; i++){
+            a.addLast(1);
         }
-        return returnSet;
+
+        for (int i = 0; i < 17; i++){
+            a.removeLast();
+        }
+
     }
+
 }

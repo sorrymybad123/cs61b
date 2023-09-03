@@ -1,6 +1,8 @@
 package deque;
 
 import java.util.Iterator;
+import java.util.Optional;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -122,10 +124,8 @@ public class ArrayDequeTest {
         Ad1.addFirst(2);
         Ad1.addFirst(1);
         Ad1.addLast(3);
-        int a = Ad1.getFirst();
-        int c = Ad1.getLast();
-        assertEquals(1, a);
-        assertEquals(3, c);
+        assertEquals(1, (int)Ad1.get(0));
+        assertEquals(3, (int)Ad1.get(2));
     }
     @Test
     /* Add large number of elements to deque; check if order is correct. */
@@ -148,21 +148,24 @@ public class ArrayDequeTest {
     }
 
     @Test
-    public void testEquel() {
-        ArrayDeque<Integer> ad1 = ArrayDeque.of(3, 4, 1, 2, 3);
-        ArrayDeque<Integer> ad2 = ArrayDeque.of(3, 4, 1, 2, 3);
-        ArrayDeque<Integer> ad3 = ArrayDeque.of(3, 4, 2, 2, 3);
-        assertEquals(true, ad1.equals(ad2));
-        assertEquals(false, ad1.equals(ad3));
-        // test the null deque
-        ArrayDeque<String> a = new ArrayDeque<>();
-        ArrayDeque<String> b = new ArrayDeque<>();
-        assertEquals(true, a.equals(b));
-
-
-
-
-
-
+    public void testEqual(){
+        ArrayDeque<Integer> a = new ArrayDeque<>();
+        ArrayDeque<Integer> b = new ArrayDeque<>();
+        assertTrue(a.equals(b));
+        a.addLast(1);
+        assertFalse(a.equals(b));
+        a.addLast(2);
+        a.addLast(3);
+        b.addLast(1);
+        b.addLast(2);
+        b.addLast(3);
+        assertTrue(a.equals(b));
+        ArrayDeque<Integer> c = new ArrayDeque<>();
+        c.addLast(1);
+        c.addLast(2);
+        c.addLast(4);
+        assertFalse(a.equals(c));
     }
 }
+
+

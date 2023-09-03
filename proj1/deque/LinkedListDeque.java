@@ -10,7 +10,8 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
 
     @Override
     public boolean equals(Object o){
-        if (o instanceof LinkedListDeque oas) {
+        if (o instanceof LinkedListDeque) {
+            LinkedListDeque<T> oas = (LinkedListDeque) o;
             if (oas.size() != this.size) {
                 return false;
             }
@@ -144,14 +145,6 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         return size;
     }
 
-    @Override
-    public String toString() {
-        ArrayDeque<String> listofTs = new ArrayDeque<>();
-        for (T x : this) {
-            listofTs.addLast(x.toString());
-        }
-        return "{" + String.join(",", listofTs) + "}";
-    }
 
 
     public void printDeque() {
