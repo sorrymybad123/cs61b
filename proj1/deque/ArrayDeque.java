@@ -1,6 +1,7 @@
 package deque;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 import static java.lang.Math.round;
 
@@ -86,7 +87,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
     public T removeLast() {
         if (!this.isEmpty()) {
             nextLast = nextLast - 1;
-            if (nextLast < 0){
+            if (nextLast < 0) {
                 nextLast = items.length - 1;
             }
             T whatever = items[nextLast];
@@ -139,22 +140,31 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
 
     @Override
     public boolean equals(Object o){
+        //检查地址是否相同
+        if (o == this) {
+            return true; // 同一个对象
+        }
         // 检查o的类型是否为ArrayDeque
-        if (o instanceof ArrayDeque){
-            ArrayDeque<T> oas = (ArrayDeque) o;
+        if (o instanceof ArrayDeque) {
+            ArrayDeque<?> oas = (ArrayDeque<?>) o;
             // 检查两个对象的大小是否相等
             if (oas.size != this.size) {
                 return false;
             }
             // 按顺序检查所有值相等
-            for (int i = 0; i < oas.size; i++) {
-               if (oas.get(i) != this.get(i)) {
-                   return false;
-               }
+            Iterator<T> thisIterator = this.iterator();
+            Iterator<?> otherIterator = oas.iterator();
+            while (thisIterator.hasNext() && otherIterator.hasNext()) {
+                T thisItem = thisIterator.next();
+                Object otherItem = otherIterator.next();
+                if (!(Objects.equals(thisItem, otherItem))){
+                    return false;
+                }
             }
-           return true;
+            return true;
+        } else {
+            return false; // 不是相同类型的对象
         }
-        return false;
     }
 
 
@@ -165,16 +175,5 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
         System.out.println(this.toString());
     }
 
-    public static void main(String[] args) {
-        ArrayDeque<Integer> a = new ArrayDeque<>();
-        for (int i = 0; i < 17; i++){
-            a.addLast(1);
-        }
-
-        for (int i = 0; i < 17; i++){
-            a.removeLast();
-        }
-
-    }
-
 }
+

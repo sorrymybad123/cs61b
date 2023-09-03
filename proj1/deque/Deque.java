@@ -4,17 +4,17 @@ import java.util.Iterator;
 
 public interface Deque<T> {
 
-    public void addFirst(T item);
-    public void addLast(T item);
-    public int size();
-    public void printDeque();
-    public T removeFirst();
-    public T removeLast();
-    public T get(int index);
+    void addFirst(T item);
+    void addLast(T item);
+    int size();
+    void printDeque();
+    T removeFirst();
+    T removeLast();
+    T get(int index);
 
-    public Iterator<T> iterator();
+    Iterator<T> iterator();
 
-    public boolean equals(Object o);
+    boolean equals(Object o);
 
 
     default boolean isEmpty() {

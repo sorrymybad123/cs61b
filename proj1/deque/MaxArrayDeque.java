@@ -37,36 +37,5 @@ If the MaxArrayDeque is empty, simply return null.*/
         return maxElement;
     }
 
-    private static class NameComparator implements Comparator<String> {
-        @Override
-        public int compare(String o1, String o2) {
-            return o1.compareTo(o2);
-        }
-    }
-
-
-    public static NameComparator getNameComparator(){
-        return new NameComparator();
-    }
-
-
-    private static class NumberComparator implements Comparator<Integer> {
-        @Override
-        public int compare(Integer o1, Integer o2) {
-            return o1 - o2;
-        }
-    }
-    public static Comparator<Integer> getNumberComparator() {
-        return new NumberComparator();
-    }
-    public static <T> MaxArrayDeque<T> of(Comparator<T> c, T... stuff){
-        MaxArrayDeque<T> returnArray = new MaxArrayDeque<>(c);
-        for (T x : stuff){
-            returnArray.addLast(x);
-        }
-        return returnArray;
-    }
-
-
 }
 
