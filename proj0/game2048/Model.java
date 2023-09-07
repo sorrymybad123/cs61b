@@ -1,12 +1,11 @@
 package game2048;
 
 import java.util.Formatter;
-import java.util.HashMap;
 import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author lv ze huan
+ *  @author TODO: YOUR NAME HERE
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -107,132 +106,13 @@ public class Model extends Observable {
      *    value, then the leading two tiles in the direction of motion merge,
      *    and the trailing tile does not.
      * */
-
-
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
+
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-        boolean add_score = false;
-        boolean same_colum = false;
-        int size = board.size();
-        HashMap hashmap = new HashMap<>();
-        Board temp;
-        // up
-        if (side == Side.NORTH){
-            for (int c = size - 1; c >= 0; c -= 1){
-                for (int r = size - 1; r >= 0; r -= 1){
-                    add_score = false;
-                    Tile t = board.tile(c, r);
-                    if(t != null){
-                        int num_of_null = checkupisnull(board, c, r + 1);
-                        int row = num_of_null + r;
-                        // check the above board is exist
-                        if (row + 1 < size) {
-                            if (t.value() == board.tile(c, row + 1).value() && !(hashmap.get(board.tile(c, row + 1)) == "true")) {
-                                row = row + 1;
-                                add_score = true;
-                            }
-                        }
-                        if (row != r){
-                            board.move(c, row, t);
-                            changed = true;
-
-                        }
-                        if (add_score == true ){
-                            score += board.tile(c, row).value();
-                            hashmap.put(board.tile(c, row), "true");
-                        }
-                    }
-
-                }
-            }
-        } else if (side == Side.WEST) {
-            for (int r = 0; r < size; r += 1) {
-                for (int c = 0; c < size; c += 1) {
-                    add_score = false;
-                    Tile t = board.tile(c, r);
-                    if (t != null) {
-                        int num_of_null = checkleftisnull(board, c - 1, r);
-                        int col = c - num_of_null;
-                        // check the above board is exist
-                        if (col - 1  >=  0 ){
-                            if (t.value() == board.tile(col-1, r).value() && !(hashmap.get(board.tile(col - 1, r)) == "true")) {
-                                col -= 1;
-                                add_score = true;
-                            }
-                        }
-                        if (col != c) {
-                            board.move(col, r, t);
-                            changed = true;
-                        }
-                        if (add_score == true) {
-                            score += board.tile(col, r).value();
-                            hashmap.put(board.tile(col, r), "true");
-                        }
-
-                    }
-                }
-            }
-        }
-        else if (side == Side.EAST) {
-            for (int r = size - 1; r >= 0; r -= 1) {
-                same_colum = false;
-                for (int c = size - 1; c >= 0; c -= 1) {
-                    add_score = false;
-                    Tile t = board.tile(c, r);
-                    if (t != null) {
-                        int num_of_null = checkrightisnull(board, c + 1, r);
-                        int col = num_of_null + c;
-                        // check the above board is exist
-                        if (col + 1 <= size - 1) {
-                            if (t.value() == board.tile(col + 1, r).value() && !(hashmap.get(board.tile(col + 1, r)) == "true") ) {
-                                col += 1;
-                                add_score = true;
-                                same_colum = true;
-                            }
-                        }
-                        if (col != c) {
-                            board.move(col, r, t);
-                            changed = true;
-                        }
-                        if (add_score) {
-                            score += board.tile(col, r).value();
-                            hashmap.put(board.tile(col, r), "true");
-                        }
-                    }
-                }
-            }
-        } else if (side == Side.SOUTH) {
-            for (int c = 0; c < size; c += 1) {
-                for (int r = 0; r < size; r += 1) {
-                    add_score = false;
-                    Tile t = board.tile(c, r);
-                    if (t != null) {
-                        int num_of_null = checkdownisnull(board, c, r - 1);
-                        int row = r - num_of_null;
-                        // check the above board is exist
-                        if (row - 1 >= 0) {
-                            if (t.value() == board.tile(c, row - 1).value() && !(hashmap.get(board.tile(c, row - 1)) == "true") ) {
-                                row = row - 1;
-                                add_score = true;
-                            }
-                        }
-                        if (row != r) {
-                            board.move(c, row, t);
-                            changed = true;
-                        }
-                        if (add_score == true) {
-                            score += board.tile(c, row).value();
-                            hashmap.put(board.tile(c, row), "true");
-                        }
-                    }
-                }
-            }
-
-        }
 
         checkGameOver();
         if (changed) {
@@ -240,56 +120,6 @@ public class Model extends Observable {
         }
         return changed;
     }
-
-
-
-    public static int checkrightisnull(Board b, int c, int r){
-        if (c > b.size() - 1){
-            return 0;
-        } else if (b.tile(c, r) != null) {
-            return 0;
-
-        } else{
-            return 1 + checkrightisnull(b, c + 1, r);
-        }
-    }
-
-
-    public static  int checkleftisnull(Board b, int c, int r){
-        if (c < 0){
-            return 0;
-        } else if (b.tile(c, r) != null) {
-            return 0;
-
-        }else{
-            return 1 + checkleftisnull(b, c - 1, r);
-
-        }
-    }
-
-
-
-
-    public static int checkdownisnull(Board b, int c, int r){
-        if (r < 0){
-            return 0;
-        } else if (b.tile(c, r) != null) {
-            return 0;
-        }else{
-            return 1 + checkdownisnull(b, c, r - 1);
-        }
-    }
-    public static int checkupisnull(Board b, int c, int r){
-        if (r > b.size() - 1){
-            return 0;
-        } else if (b.tile(c, r) != null) {
-            return 0;
-        } else{
-            return 1 + checkupisnull(b, c, r + 1);
-        }
-    }
-
-
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
@@ -308,15 +138,6 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
-        int size_b = b.size();
-        for (int col = 0; col < size_b; col += 1) {
-            for (int row = 0; row < size_b; row += 1) {
-                Tile tile_value = b.tile(col, row);
-                if (tile_value == null) {
-                    return true;
-                }
-            }
-        }
         return false;
     }
 
@@ -326,23 +147,9 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        int size_b = b.size();
-        for (int col = 0; col < size_b; col += 1) {
-            for (int row = 0; row < size_b; row += 1) {
-                Tile tile_value = b.tile(col, row);
-                if (tile_value == null){
-                    continue;
-                }
-                int x = tile_value.value();
-                if (x == MAX_PIECE) {
-                    return true;
-                }
-
-            }
-        }
+        // TODO: Fill in this function.
         return false;
     }
-
 
     /**
      * Returns true if there are any valid moves on the board.
@@ -351,41 +158,7 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        int size_b = b.size();
-        for (int col = 0; col < size_b; col += 1) {
-            for (int row = 0; row < size_b; row += 1) {
-                Tile tile_value = b.tile(col, row);
-                if (tile_value == null){
-                    return true;
-                }
-                int x = tile_value.value();
-
-                // test the right value
-                if(col < size_b - 1){
-                    Tile value_right = b.tile(col + 1, row );
-                    if (value_right != null){
-                        int y = value_right.value();
-                        if (y == x){
-                            return true;
-                        }
-                    }
-
-                }
-          // test the down value
-                if (row < size_b - 1){
-                    if (b.tile(col, row + 1) != null){
-                        int value_down = b.tile(col, row + 1).value();
-                        if (value_down == x){
-                            return true;
-                        }
-
-                    }
-                }
-
-
-
-            }
-        }
+        // TODO: Fill in this function.
         return false;
     }
 
