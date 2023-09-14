@@ -1,6 +1,10 @@
 package capers;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Serializable;
+
 import static capers.Utils.*;
 
 /** A repository for Capers 
@@ -30,8 +34,13 @@ public class CapersRepository {
      *    - dogs/ -- folder containing all of the persistent data for dogs
      *    - story -- file containing the current story
      */
-    public static void setupPersistence() {
-        // TODO
+    public static void setupPersistence() throws IOException {
+        File capers = new File(CWD, ".capers");
+        capers.mkdir();
+        File dogs = new File(capers, "dogs");
+        dogs.mkdir();
+        File story = new File(capers, "story.txt");
+        story.createNewFile();
     }
 
     /**
@@ -39,7 +48,15 @@ public class CapersRepository {
      * to a file called `story` in the .capers directory.
      * @param text String of the text to be appended to the story
      */
-    public static void writeStory(String text) {
+    public static void writeStory(String text) throws IOException {
+        File story = new File(CWD + "/.capers/story.txt");
+        String lastText = null;
+        if (story.exists()) {
+            lastText = Utils.readContentsAsString(story);
+        }
+        Utils.writeContents(story, lastText + "\n" + text);
+        text = Utils.readContentsAsString(story);
+        System.out.println(text);
         // TODO
     }
 
@@ -49,7 +66,10 @@ public class CapersRepository {
      * Also prints out the dog's information using toString().
      */
     public static void makeDog(String name, String breed, int age) {
-        // TODO
+       Dog newDog = new Dog(name, breed, age);
+       File dog = new File(".capers/dogs/" + name);
+       dog.mkdir();
+       System.out.println(newDog.toString());
     }
 
     /**
