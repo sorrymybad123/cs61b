@@ -93,8 +93,10 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         }
 
         if (containsKey(key)) { // if this map already exist
-            for (Node x : bucket) {
-                x.value = value;
+            for (Node x : bucket) { // iterate the bucket
+                if (x.key.equals(key)) { // find the exact key
+                    x.value = value;
+                }
             }
         } else {
             // if there is no that map add one to this bucket
