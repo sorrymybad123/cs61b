@@ -1,0 +1,35 @@
+random Test
+Enter # strings to insert into hashmap.ULLMap: 10000000
+--Stack Overflow -- couldn't add 10000000 strings of length 5.
+
+Enter # strings to insert into your hashmap.MyHashMap: 10000000
+class hashmap.MyHashMap: 9.40 sec
+
+Enter # strings to insert into Java's HashMap: 10000000
+Java's Built-in HashMap: 6.97 sec
+
+
+
+order Test
+Enter # strings to insert into hashmap.ULLMap: 10000000
+--Stack Overflow -- couldn't add 10000000 strings.
+
+Enter # strings to insert into hashmap.MyHashMap: 10000000
+class hashmap.MyHashMap: 27.20 sec
+
+Enter # strings to insert into Java's HashMap: 10000000
+Java's Built-in HashMap: 5.12 sec
+
+
+when the value is order and very big it is better to use hashmap
+
+
+
+Enter # strings to insert into each map: 10000000
+class hashmap.MyHashMapALBuckets: 9.66 sec
+class hashmap.MyHashMapLLBuckets: 13.59 sec
+class hashmap.MyHashMapTSBuckets: 12.32 sec
+class hashmap.MyHashMapHSBuckets: 9.06 sec
+class hashmap.MyHashMapPQBuckets: 6.98 sec
+
+Obviously, it is speed up
