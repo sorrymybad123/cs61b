@@ -191,14 +191,12 @@ class Utils {
     /* OTHER FILE UTILITIES */
 
     /** Return the concatentation of FIRST and OTHERS into a File designator,
-     *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
      *  method. */
     static File join(String first, String... others) {
         return Paths.get(first, others).toFile();
     }
 
     /** Return the concatentation of FIRST and OTHERS into a File designator,
-     *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
      *  method. */
     static File join(File first, String... others) {
         return Paths.get(first.getPath(), others).toFile();
@@ -233,7 +231,7 @@ class Utils {
     /** Print a message composed from MSG and ARGS as for the String.format
      *  method, followed by a newline. */
     static void message(String msg, Object... args) {
-        System.out.printf(msg, args);
+        System.out.printf(msg, args); // maybe i can use?
         System.out.println();
     }
 }

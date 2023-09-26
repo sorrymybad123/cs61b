@@ -1,6 +1,8 @@
 package gitlet;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.TreeMap;
 
 /** A debugging class whose main program may be invoked as follows:
  *      java gitlet.DumpObj FILE...
@@ -27,10 +29,12 @@ import java.io.File;
  *  objects of your class.
  *  @author P. N. Hilfinger
  */
-public class DumpObj {
+public class DumpObj implements Dumpable, Serializable {
 
     /** Deserialize and apply dump to the contents of each of the files
      *  in FILES. */
+    int _size;
+    TreeMap<String, String> _mapping = new TreeMap<>();
     public static void main(String... files) {
         for (String fileName : files) {
             Dumpable obj = Utils.readObject(new File(fileName),
@@ -38,6 +42,11 @@ public class DumpObj {
             obj.dump();
             System.out.println("---");
         }
+    }
+
+    @Override
+    public void dump() {
+       System.out.printf("size: %d%nmapping: %s%n", _size, _mapping);
     }
 }
 
