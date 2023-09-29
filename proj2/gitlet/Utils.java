@@ -63,6 +63,21 @@ class Utils {
         return sha1(vals.toArray(new Object[vals.size()]));
     }
 
+    /**
+     * check string if it is sha1 id
+     */
+    static boolean sha1OrNot(String someString) {
+        if (someString.length() == 40) {
+            for (char c : someString.toCharArray()) {
+                if (!Character.isDigit(c) && (c < 'a' || c > 'f')) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     /* FILE DELETION */
 
     /** Deletes FILE if it exists and is not a directory.  Returns true

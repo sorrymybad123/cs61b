@@ -1,9 +1,8 @@
 package gitlet;
 
 
-import java.io.IOException;
-import java.io.File;
-import java.io.Serializable;
+import java.io.*;
+import java.util.LinkedList;
 
 public class Blob implements Serializable {
     private byte[] content;
@@ -29,10 +28,11 @@ public class Blob implements Serializable {
         return filename;
     }
 
+
     /**
      * add blob to FileStorage
      */
-    private void addBlobToStorage(File file) {
+    private void addBlobToStorage(File file) throws IOException {
         FileStorage fileStorage = new FileStorage();
         fileStorage.addFile(sha1, filename, content);
     }
@@ -40,17 +40,54 @@ public class Blob implements Serializable {
     /**
      * serialize a blob in Staging area
      */
-    public void savaBlob() throws IOException {
+    public void savaBlobToLinkListStagingArea() throws IOException {
+        // use link list to store blob
+        LinkedList<Blob> blobLinkedList = new LinkedList<>();
+        // check if staging area file exists
+        if (StagingArea.stagingArea.exists()) {
+            // save last staging area blobs
+            LinkedList<Blob> existBlobList = Utils.readObject(StagingArea.stagingArea, LinkedList.class);
+            for (Blob b : existBlobList) {
+                blobLinkedList.add(b);
+            }
+        }
+
         if (!StagingArea.stagingArea.exists()) {
             StagingArea.stagingArea.createNewFile();
         }
+        // add this to link list
+        blobLinkedList.add(this);
+
+        // write the merged blob back to the staging area file
+        Utils.writeObject(StagingArea.stagingArea, blobLinkedList);
+    }
+
+    /**
+     * Serialize a single Blob to the staging area
+     */
+    public void saveBlob() throws IOException {
+        // Check if the staging area file exists
+        if (!StagingArea.stagingArea.exists()) {
+            StagingArea.stagingArea.createNewFile();
+        }
+
+        // Write the current Blob to the staging area file
         Utils.writeObject(StagingArea.stagingArea, this);
+    }
+
+
+
+    /**
+     * get sha1 by file content
+     */
+    public static String getSha1ByFile(File file) throws IOException {
+        return calculateSHA1(readContentFromFile(file));
     }
 
     /**
      * reading content from file
      */
-    private byte[] readContentFromFile(File file) throws IOException {
+    private static byte[] readContentFromFile(File file) throws IOException {
         if (!file.exists()) {
             System.out.println("this file do not exist in readContentFile() function");
             System.exit(0);
@@ -61,9 +98,7 @@ public class Blob implements Serializable {
     /**
      * calculate sha1 of file
      */
-    private String calculateSHA1(byte[] content) {
+    private static String calculateSHA1 ( byte[] content){
         return Utils.sha1(content);
     }
-
-
 }

@@ -4,20 +4,20 @@
 
 ## Classes and Data Structures
 
-### Commit
-
-#### Field 
-
-1. commit 
-2. saveCommit 
-
-
-###  add
+### Class 1
 
 #### Fields
 
-1. addFile -- add file from blob to staging area
-2.  
+1. Field 1
+2. Field 2
+
+
+### Class 2
+
+#### Fields
+
+1. Field 1
+2. Field 2
 
 
 ## Algorithms
