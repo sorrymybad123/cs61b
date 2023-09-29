@@ -2,10 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+
 
 /**
  * use branches file to store all branch and the content of file is sha1
@@ -26,7 +23,6 @@ public class Branch {
     // which sha1 of commit
     String commitSha1;
 
-    int status;
 
 
 
@@ -48,29 +44,7 @@ public class Branch {
         return branchFile;
     }
 
-    /**
-     * put this branch as main branch
-     * @throws IOException
-     */
-    public void changeStatusToMain() {
-        this.status = status_main;
-    }
 
-    /**
-     * make this branch is HEAD, HEAD only have one
-     * @throws IOException
-     */
-    public void statusAsHEAD() {
-        this.status = status_HEAD;
-    }
-
-    /**
-     * change status to normal branch which does not chase
-     * @throws IOException
-     */
-    public void changeStatusToNormalBranch() {
-        this.status = status_other;
-    }
 
     public Branch(String name) throws IOException {
         this.name = name;
@@ -108,21 +82,7 @@ public class Branch {
         return name;
     }
 
-    /**
-     * return teh commit sha1
-     * @return
-     */
-    public String getSha1() {
-        return commitSha1;
-    }
 
-    /**
-     * update the file by the sha1
-     * @param commitSha1Code
-     */
-    public void upDateBranch(String commitSha1Code) throws IOException {
-        writeSha1ToBranchFile(commitSha1Code);
-    }
 
     /**
      * check up a branch

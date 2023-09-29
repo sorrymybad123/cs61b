@@ -62,9 +62,9 @@ public class Blob implements Serializable {
         Utils.writeObject(StagingArea.stagingArea, blobLinkedList);
     }
 
-    /**
+    /*
      * Serialize a single Blob to the staging area
-     */
+
     public void saveBlob() throws IOException {
         // Check if the staging area file exists
         if (!StagingArea.stagingArea.exists()) {
@@ -74,6 +74,7 @@ public class Blob implements Serializable {
         // Write the current Blob to the staging area file
         Utils.writeObject(StagingArea.stagingArea, this);
     }
+    */
 
 
 

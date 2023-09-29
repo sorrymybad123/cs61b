@@ -46,6 +46,8 @@ public class FileStorage implements Serializable{
     }
 
 
+
+
     /**
      * use sha1 to obtain the content
      * @param sha1
@@ -60,7 +62,7 @@ public class FileStorage implements Serializable{
         return fileMap.get(sha1).get(fileName);
     }
 
-    private HashMap<String ,Map<String, byte[]>> getFileMap() {
+    public HashMap<String ,Map<String, byte[]>> getFileMap() {
         return fileMap;
     }
 

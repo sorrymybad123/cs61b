@@ -16,7 +16,7 @@ public class Main {
             System.exit(0); // exit the program
         }
         String firstArg = args[0];
-        switch(firstArg) {
+        switch (firstArg) {
             case "init":
                 validateNumArgs("init", args, 1);
                 if (Repository.GITLET_DIR.exists()) {
@@ -85,7 +85,16 @@ public class Main {
                 validateNumArgs("branch", args, 2);
                 Repository.createBranch(args[1]);
                 break;
-
+            case "rm-branch":
+                checkInitOrNot();
+                validateNumArgs("rm-branch", args, 2);
+                Repository.deleteBranch(args[1]);
+                break;
+            case "reset":
+                checkInitOrNot();
+                validateNumArgs("reset", args, 2);
+                Repository.reset(args[1]);
+                break;
             default:
                 System.out.println("No command with that name exists!");
                 System.exit(0); // exit the program
@@ -101,8 +110,8 @@ public class Main {
 
     public static void checkInitOrNot() {
         if (!Repository.GITLET_DIR.exists()) {
-           System.out.println("Not in an initialized Gitlet directory.");
-           System.exit(0);
+            System.out.println("Not in an initialized Gitlet directory.");
+            System.exit(0);
         }
     }
 }

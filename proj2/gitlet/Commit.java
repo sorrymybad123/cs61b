@@ -210,6 +210,7 @@ public class Commit implements Serializable {
         return HEAD;
     }
 
+
     /**
      * use sha1 to find the commit
      */

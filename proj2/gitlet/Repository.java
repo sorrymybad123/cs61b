@@ -275,7 +275,7 @@ public class Repository {
 
 
         System.out.println("=== Untracked Files ===");
-        List<String> untrackedFileName = getUntrackedFile(Branch.findMainBranch().getName());
+        List<String> untrackedFileName = getUntrackedFileByBranchName(Branch.findMainBranch().getName());
         for (String filename : untrackedFileName) {
             System.out.println(filename);
         }
@@ -351,19 +351,25 @@ public class Repository {
     /**
      * get untracked file from working directory from different branch
      */
-    private static List<String> getUntrackedFile(String branchName) {
+    private static List<String> getUntrackedFileByBranchName(String branchName) {
         String commitId = Branch.checkupCommitIdByBranchName(branchName);
+        return getUntrackedFileByCommitSha1(commitId);
+    }
+    /**
+     * get untracked file by commit id
+     */
+    private static List<String> getUntrackedFileByCommitSha1(String commitId) {
         Commit thisCommit = Commit.findCommitByCommitSha1(commitId);
         TreeMap<String, String> fileToFileSha1 = thisCommit.getBlobPoints();
         List<String> listOfWorkingDirectoryFile = Utils.plainFilenamesIn(CWD);
         List<String> untrackedFileName  = new ArrayList<>();
         for (String filename : listOfWorkingDirectoryFile) {
             if (fileToFileSha1.keySet().contains(filename)) {
-               continue;
+                continue;
             }
             untrackedFileName.add(filename);
         }
-       return untrackedFileName;
+        return untrackedFileName;
     }
 
 
@@ -399,7 +405,51 @@ public class Repository {
         }
 
         // delete all the untracked file
-        List<String> untrackedFile = getUntrackedFile(branchName);
+        List<String> untrackedFile = getUntrackedFileByBranchName(branchName);
+        for (String untrackedFilename : untrackedFile) {
+            File untrackedFileToDelete = Utils.join(CWD, untrackedFilename);
+            Utils.restrictedDelete(untrackedFileToDelete);
+        }
+
+        // clear the staging area
+        StagingArea.clearStagingArea();
+    }
+
+    /**
+     * checks out all the files tracked by the given commit.
+     * Removes tracked files that are not present in that commit node
+     */
+    public static void reset(String commitId) throws IOException {
+        File file = Utils.join(Commit.commitsFile, commitId);
+        // check the branch if exist
+        if (!file.exists()) {
+            Utils.message("No commit with that id exists.", file);
+            System.exit(0);
+        }
+        String HeadCommitId = Commit.findLatestCommitSha1();
+        List<String> unTrackedFileOfCurrentBranch = getUntrackedFileByCommitSha1(HeadCommitId);
+
+        String thisBranchCommitId = commitId;
+
+        // get the commit by commit id
+        Commit thisBranchCommit = Commit.findCommitByCommitSha1(thisBranchCommitId);
+        TreeMap<String, String> thisCommitBlobPoints = thisBranchCommit.getBlobPoints();
+        for (String filename : thisCommitBlobPoints.keySet()) {
+            String fileSha1 = thisCommitBlobPoints.get(filename);
+            FileStorage fileStorage = FileStorage.loadFileStorage();
+
+            // if a working file is untracked in the current branch and would be overwritten by the reset
+            if (unTrackedFileOfCurrentBranch.contains(filename)) {
+                System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                System.exit(0);
+            }
+
+            byte[] fileContent = fileStorage.getContentBySHA1(fileSha1, filename);
+            changeFileContentInWorkingDirectory(filename, fileContent);
+        }
+
+        // delete all the untracked file
+        List<String> untrackedFile = getUntrackedFileByCommitSha1(commitId);
         for (String untrackedFilename : untrackedFile) {
             File untrackedFileToDelete = Utils.join(CWD, untrackedFilename);
             Utils.restrictedDelete(untrackedFileToDelete);
