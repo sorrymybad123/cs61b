@@ -2,6 +2,8 @@ package gitlet;
 
 
 import java.io.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class Blob implements Serializable {
@@ -17,7 +19,7 @@ public class Blob implements Serializable {
        this.content = readContentFromFile(file);
        this.sha1 = calculateSHA1(content);
        this.filename = file.getName();
-       addBlobToStorage(file);
+       addBlobToStorage();
     }
 
     public String getSha1() {
@@ -32,7 +34,7 @@ public class Blob implements Serializable {
     /**
      * add blob to FileStorage
      */
-    private void addBlobToStorage(File file) throws IOException {
+    private void addBlobToStorage() throws IOException {
         FileStorage fileStorage = new FileStorage();
         fileStorage.addFile(sha1, filename, content);
     }
@@ -88,7 +90,7 @@ public class Blob implements Serializable {
     /**
      * reading content from file
      */
-    private static byte[] readContentFromFile(File file) throws IOException {
+    private static byte[] readContentFromFile(File file){
         if (!file.exists()) {
             System.out.println("this file do not exist in readContentFile() function");
             System.exit(0);
