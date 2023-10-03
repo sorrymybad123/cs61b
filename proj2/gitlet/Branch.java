@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -33,6 +34,13 @@ public class Branch {
        createBranchFile();
        // make sha1 into the file
        writeSha1ToBranchFile(sha1);
+    }
+
+    /**
+     * get commit by branch name
+     */
+    public static Commit getCommitByBranchName(String branchName) {
+        return Commit.findCommitByCommitSha1(Branch.checkupCommitIdByBranchName(branchName));
     }
 
     /**
@@ -95,6 +103,13 @@ public class Branch {
         String commitSha1 = Utils.readContentsAsString(Branchfile);
 
         return commitSha1;
+    }
+
+    /**
+     * get current branches
+     */
+    public static List<String> getCurrentBranchesO() {
+       return Utils.plainFilenamesIn(branches);
     }
 
 

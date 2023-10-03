@@ -51,19 +51,34 @@ public class FileStorage implements Serializable{
     /**
      * use sha1 to obtain the content
      * @param sha1
-     * @param fileName
      * @return
      */
-    public byte[] getContentBySHA1(String sha1, String fileName) {
+    public byte[] getContentBySHA1(String sha1) {
+        if (sha1 == null) {
+            return null;
+        }
         if (!fileMap.containsKey(sha1)) {
             System.out.println("there is no such sha1 in storage");
             System.exit(0);
         }
-        return fileMap.get(sha1).get(fileName);
+        byte[] result = null;
+        Map<String, byte[]> getContentByName = fileMap.get(sha1);
+        for (String fileName : getContentByName.keySet()) {
+            result = getContentByName.get(fileName);
+        }
+        return result;
     }
 
     public HashMap<String ,Map<String, byte[]>> getFileMap() {
         return fileMap;
+    }
+
+    /**
+     * create a file by file sha1 id
+     */
+    public static void createFileBySha1(String fileSha1) {
+        FileStorage fileStorage1 = FileStorage.loadFileStorage();
+        fileStorage1.getContentBySHA1(fileSha1);
     }
 
 
@@ -72,6 +87,18 @@ public class FileStorage implements Serializable{
      */
     private void createStorage() throws IOException {
         fileStorage.createNewFile();
+    }
+
+    /**
+     * get file name by sha1 id
+     */
+    public String getNameByFileId(String fileId) {
+        String result = null;
+        Map<String, byte[]> getContentByName = fileMap.get(fileId);
+        for (String fileName : getContentByName.keySet()) {
+            result = fileName;
+        }
+        return result;
     }
 
     /**

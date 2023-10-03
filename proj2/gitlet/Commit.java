@@ -36,13 +36,17 @@ public class Commit implements Serializable {
     // second parent for merge?
     private String secondParent;
 
+
     // sha1 code to point storage file
     private TreeMap<String, String> blobPoints;
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z");
 
+    private String MergeMessage;
+
     public Commit(String message, String parent, String secondParent) throws IOException {
         this(message, parent);
         this.secondParent = secondParent;
+        MergeMessage = parent.substring(0, 7) + " " + secondParent.substring(0, 7);
     }
 
     public Commit() throws IOException {
@@ -68,7 +72,7 @@ public class Commit implements Serializable {
             }
             // if rmStaging Area is existing delete it from new commit
             if (StagingArea.rmStagingArea.exists()) {
-                String rmFileName = getNameFromRmArea();
+                LinkedList<String> rmFileName = getListOfNameFromRmArea();
                 updateDeletion(rmFileName);
                 // after the deletion delete the rm area
                 StagingArea.clearRmArea();
@@ -93,6 +97,14 @@ public class Commit implements Serializable {
 
     }
 
+
+
+    /**
+     * find latest branch commit
+     */
+    public static Commit findLatestBranchCommit() {
+        return findCommitByCommitSha1(findLatestCommitSha1());
+    }
 
 
     /**
@@ -138,7 +150,7 @@ public class Commit implements Serializable {
         return parent;
     }
 
-    private String getSecondParent() {
+    public String getSecondParent() {
         return secondParent;
     }
 
@@ -150,6 +162,31 @@ public class Commit implements Serializable {
         File file = Utils.join(commitsFile, commitName);
         file.createNewFile();
         Utils.writeObject(file, this);
+    }
+
+    /**
+     * get merged message
+     */
+    public String getMergeMessage() {
+        return MergeMessage;
+    }
+
+    /**
+     * find latest commit
+     */
+    public static Commit findLatestCommit() {
+        return findCommitByCommitSha1(findLatestCommitSha1());
+    }
+
+
+    /**
+     * get current file pointer from current commit
+     * @return
+     * @throws IOException
+     */
+    public static TreeMap<String, String> getCurrentCommitBlobPoints() {
+        Commit commit = findLatestCommit();
+        return commit.getBlobPoints();
     }
 
     public File savaCommitToFile() throws IOException {
@@ -191,11 +228,11 @@ public class Commit implements Serializable {
     /**
      *rm the name info from rm staging area
      */
-    private String getNameFromRmArea() {
+    private LinkedList<String> getListOfNameFromRmArea() {
         if (!StagingArea.rmStagingArea.exists()) {
             return null;
         }
-        return Utils.readContentsAsString(StagingArea.rmStagingArea);
+        return Utils.readObject(StagingArea.rmStagingArea, LinkedList.class);
     }
 
     /**
@@ -215,6 +252,9 @@ public class Commit implements Serializable {
      * use sha1 to find the commit
      */
     public static Commit findCommitByCommitSha1(String commitSha1) {
+        if (commitSha1 == null) {
+            return null;
+        }
         File file = Utils.join(commitsFile, commitSha1);
         return  Utils.readObject(file, Commit.class);
     }
@@ -231,12 +271,67 @@ public class Commit implements Serializable {
         return false;
     }
 
+
+    /**
+     * find the parent commit
+     */
+    public Commit getParentCommit() {
+        return Commit.findCommitByCommitSha1(getParent());
+    }
+
+    /**
+     * find second parent commit
+     */
+    public Commit getSecondParentCommit() {
+       return Commit.findCommitByCommitSha1(getSecondParent());
+    }
+
+    private void getWholeBranchOfThisCommitHelper(LinkedList<String> branchList) throws IOException {
+        branchList.add(this.getSha1OfCommit());
+        if (this.parent != null) {
+            Commit commitParent = this.getParentCommit();
+            commitParent.getWholeBranchOfThisCommitHelper(branchList);
+        }
+        if (this.secondParent != null) {
+            Commit commitSecondParent = this.getSecondParentCommit();
+            commitSecondParent.getWholeBranchOfThisCommitHelper(branchList);
+        }
+    }
+
+    /**
+     * get the whole branch of this commit
+     */
+    public LinkedList<String> getWholeBranchOfThisCommit() throws IOException {
+        LinkedList<String> linkedListOfWholeBranch = new LinkedList<>();
+        getWholeBranchOfThisCommitHelper(linkedListOfWholeBranch);
+        return linkedListOfWholeBranch;
+    }
+
+
+
+    /**
+     * find the latest same parent
+     */
+    public Commit findTheSplitPoint(String branchName) throws IOException {
+        Commit commitGivenBranch = Branch.getCommitByBranchName(branchName);
+        LinkedList<String> wayOfGivenBranch = commitGivenBranch.getWholeBranchOfThisCommit();
+        LinkedList<String> wayOfCurrentBranch = this.getWholeBranchOfThisCommit();
+        for (String x :wayOfGivenBranch) {
+            if (wayOfCurrentBranch.contains(x)) {
+                return Commit.findCommitByCommitSha1(x);
+            }
+        }
+        return null;
+    }
+
     /**
      * update deletion in new commit
      */
-    private void updateDeletion(String filenameToDeletion) {
-        if (checkTheFileInBlobPointsOrNot(filenameToDeletion)) {
-            this.blobPoints.remove(filenameToDeletion);
+    private void updateDeletion(LinkedList<String> filenamesToDeletion) {
+        for (String filenameToDeletion : filenamesToDeletion) {
+            if (checkTheFileInBlobPointsOrNot(filenameToDeletion)) {
+                this.blobPoints.remove(filenameToDeletion);
+            }
         }
     }
 
@@ -248,5 +343,21 @@ public class Commit implements Serializable {
         for (String x : map.keySet()) {
             this.blobPoints.put(x, map.get(x));
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Commit) {
+            Commit oas = (Commit) o;
+            try {
+                if (this.getSha1OfCommit().equals(oas.getSha1OfCommit())) {
+                    return true;
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return false;
+
     }
 }

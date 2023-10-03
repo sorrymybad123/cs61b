@@ -17,9 +17,15 @@ public class Blob implements Serializable {
      */
     public Blob(File file) throws IOException {
        this.content = readContentFromFile(file);
-       this.sha1 = calculateSHA1(content);
+       this.sha1 = getSha1ByFile(file);
        this.filename = file.getName();
        addBlobToStorage();
+    }
+
+    public Blob(String filename, String fileSha1,  byte[] content) {
+        this.filename = filename;
+        this.sha1 = fileSha1;
+        this.content = content;
     }
 
     public String getSha1() {
@@ -40,6 +46,16 @@ public class Blob implements Serializable {
     }
 
     /**
+     * get blob by sha1
+     */
+    public Blob getBlobBySha1(String sha1) {
+        if (sha1.equals(this.getSha1())) {
+            return this;
+        }
+        return null;
+    }
+
+    /**
      * serialize a blob in Staging area
      */
     public void savaBlobToLinkListStagingArea() throws IOException {
@@ -48,10 +64,7 @@ public class Blob implements Serializable {
         // check if staging area file exists
         if (StagingArea.stagingArea.exists()) {
             // save last staging area blobs
-            LinkedList<Blob> existBlobList = Utils.readObject(StagingArea.stagingArea, LinkedList.class);
-            for (Blob b : existBlobList) {
-                blobLinkedList.add(b);
-            }
+            blobLinkedList = StagingArea.getBlobListForThisStagingArea();
         }
 
         if (!StagingArea.stagingArea.exists()) {

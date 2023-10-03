@@ -38,5 +38,5 @@ D UID1 "${2}"
 > checkout ${UID2} -- wug.txt
 <<<
 = wug.txt notwug.txt
->branch lzh
+> branch lzh
 <<<
