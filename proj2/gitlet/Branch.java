@@ -27,7 +27,7 @@ public class Branch {
 
 
 
-    public Branch(String name,String sha1) throws IOException {
+    public Branch(String name, String sha1) throws IOException {
         this.name = name;
         this.commitSha1 = sha1;
        // create the file
@@ -109,7 +109,7 @@ public class Branch {
      * get current branches
      */
     public static List<String> getCurrentBranchesO() {
-       return Utils.plainFilenamesIn(branches);
+        return Utils.plainFilenamesIn(branches);
     }
 
 

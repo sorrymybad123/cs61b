@@ -85,7 +85,7 @@ public class StagingArea implements Serializable {
         if (stagingArea.exists()) {
             LinkedList<Blob> blobLinkedList = Utils.readObject(stagingArea, LinkedList.class);
             for (Blob b : blobLinkedList) {
-                if (b.getSha1().equals(addSha1) && b.filename.equals(name)) {
+                if (b.getSha1().equals(addSha1) && b.getFilename().equals(name)) {
                     System.exit(0);
                 }
             }

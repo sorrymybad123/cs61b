@@ -143,7 +143,7 @@ public class Repository {
             LinkedList<Blob> blobLinkedList = StagingArea.getBlobListForThisStagingArea();
             for (Blob b : blobLinkedList) {
                 if (listOfUntrackedFiles.contains(b.getFilename())) {
-                    listOfUntrackedFiles.remove(b.filename);
+                    listOfUntrackedFiles.remove(b.getFilename());
                 }
             }
         }
