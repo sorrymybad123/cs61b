@@ -45,7 +45,11 @@ public class Engine {
         //
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
-
+        int seed;
+        if (input.charAt(0) == 'N' && input.charAt(input.length() - 1) == 'S') {
+            seed = Integer.parseInt(input.substring(1, input.length() - 1));
+            randomWorld randomWorld = new randomWorld(seed);
+        }
         TETile[][] finalWorldFrame = null;
         return finalWorldFrame;
     }
