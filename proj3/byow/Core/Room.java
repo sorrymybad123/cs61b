@@ -29,7 +29,7 @@ public class Room {
      * room constructor
      * @param p
      */
-    public Room(Position p, int seed) {
+    public Room(Position p, long seed) {
         RANDOM = new Random(seed);
         boolean roomCreated = false;
         // determine whether we need to do it again

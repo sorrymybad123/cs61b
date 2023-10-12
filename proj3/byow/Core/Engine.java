@@ -3,6 +3,7 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
+import java.math.BigInteger;
 import java.util.Random;
 
 public class Engine {
@@ -48,9 +49,9 @@ public class Engine {
         //
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
-        int seed;
-        if (input.charAt(0) == 'N' && input.charAt(input.length() - 1) == 'S') {
-            seed = Integer.parseInt(input.substring(1, input.length() - 1));
+        long seed;
+        if (input.charAt(0) == 'n' && input.charAt(input.length() - 1) == 's') {
+            seed = Long.parseLong((input.substring(1, input.length() - 1)));
             randomWorld randomWorld = new randomWorld(seed);
         }
         TETile[][] finalWorldFrame = randomWorld.randomTiles;

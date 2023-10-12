@@ -116,7 +116,7 @@ public class randomWorld {
     /**
      * create the world
      */
-    public randomWorld(int seed) {
+    public randomWorld(long seed) {
         this.RANDOM = new Random(SEED);
         // create the world with nothing
         SEED = seed;
