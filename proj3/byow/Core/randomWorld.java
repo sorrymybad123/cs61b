@@ -183,7 +183,7 @@ public class randomWorld {
         }
 
         addWall();
-        ter.renderFrame(randomTiles);
+        //ter.renderFrame(randomTiles);
     }
 
 
