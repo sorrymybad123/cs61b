@@ -3,11 +3,14 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
+import java.util.Random;
+
 public class Engine {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
+
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
@@ -50,7 +53,7 @@ public class Engine {
             seed = Integer.parseInt(input.substring(1, input.length() - 1));
             randomWorld randomWorld = new randomWorld(seed);
         }
-        TETile[][] finalWorldFrame = null;
+        TETile[][] finalWorldFrame = randomWorld.randomTiles;
         return finalWorldFrame;
     }
 }
