@@ -127,12 +127,12 @@ public class randomWorld {
      */
     public randomWorld(long seed) {
 
+        randomTiles = new TETile[WIDTH][HEIGHT];
         this.RANDOM = new Random(SEED);
         // create the world with nothing
         SEED = seed;
         //TERenderer ter = new TERenderer();
         //ter.initialize(WIDTH, HEIGHT);
-        randomTiles = new TETile[WIDTH][HEIGHT];
         fillWithNothingTiles(randomTiles);
 
 
