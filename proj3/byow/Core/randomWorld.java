@@ -130,8 +130,8 @@ public class randomWorld {
         this.RANDOM = new Random(SEED);
         // create the world with nothing
         SEED = seed;
-        TERenderer ter = new TERenderer();
-        ter.initialize(WIDTH, HEIGHT);
+        //TERenderer ter = new TERenderer();
+        //ter.initialize(WIDTH, HEIGHT);
         randomTiles = new TETile[WIDTH][HEIGHT];
         fillWithNothingTiles(randomTiles);
 
