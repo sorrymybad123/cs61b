@@ -1,6 +1,5 @@
 package byow.Core;
 
-import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
@@ -18,7 +17,7 @@ public class randomWorld {
 
     private long SEED;
     public  Random RANDOM;
-    public static TETile[][] randomTiles;
+    public TETile[][] randomTiles;
 
 
 
@@ -51,15 +50,15 @@ public class randomWorld {
     /**
      * get the tile in this position
      */
-    private static TETile getTile(Position p) {
+    private static TETile getTile(Position p, TETile[][] randomTiles) {
         return randomTiles[p.x][p.y];
     }
 
     /**
      * change it to wall
      */
-    private static void changeToWall(Position p) {
-        if (getTile(p).equals(Tileset.NOTHING)) {
+    private static void changeToWall(Position p, TETile[][] randomTiles) {
+        if (getTile(p, randomTiles).equals(Tileset.NOTHING)) {
             // change that tile in that position
             randomTiles[p.x][p.y] = Tileset.WALL;
         }
@@ -69,7 +68,7 @@ public class randomWorld {
     /**
      * fill the wall around
      */
-    private static void fillWall(Position p) {
+    private static void fillWall(Position p, TETile[][] randomTiles) {
         Position left = new Position(p.x - 1, p.y);
         Position right = new Position(p.x + 1, p.y);
         Position up = new Position(p.x, p.y + 1);
@@ -78,14 +77,14 @@ public class randomWorld {
         Position rightUp = new Position(p.x + 1, p.y + 1);
         Position LeftDown = new Position(p.x - 1, p.y - 1);
         Position rightDown = new Position(p.x + 1, p.y - 1);
-        changeToWall(left);
-        changeToWall(right);
-        changeToWall(up);
-        changeToWall(down);
-        changeToWall(leftUp);
-        changeToWall(rightUp);
-        changeToWall(LeftDown);
-        changeToWall(rightDown);
+        changeToWall(left, randomTiles);
+        changeToWall(right, randomTiles);
+        changeToWall(up, randomTiles);
+        changeToWall(down, randomTiles);
+        changeToWall(leftUp, randomTiles);
+        changeToWall(rightUp, randomTiles);
+        changeToWall(LeftDown, randomTiles);
+        changeToWall(rightDown, randomTiles);
 
 
     }
@@ -94,13 +93,13 @@ public class randomWorld {
     /**
      * if a position is nothing add it with wall
      */
-    private static void addWall() {
+    private static void addWall(TETile[][] randomTiles) {
         for (int x = 0; x < WIDTH; x += 1) {
             for (int y = 0; y < HEIGHT; y += 1) {
                 if (randomTiles[x][y].equals(Tileset.FLOOR)) {
                     // fill the wall around for this floor
                     Position p = new Position(x, y);
-                    fillWall(p);
+                    fillWall(p, randomTiles);
                 }
             }
         }
@@ -109,8 +108,8 @@ public class randomWorld {
     /**
      * create room
      */
-    public void createRoom(Position p) {
-        Room roomConner = new Room(p, SEED);
+    public void createRoom(Position p, TETile[][] randomTiles) {
+        Room roomConner = new Room(p, SEED, randomTiles);
         roomConner.saveRoomToRooms();
     }
 
@@ -127,6 +126,7 @@ public class randomWorld {
      * create the world
      */
     public randomWorld(long seed) {
+
         this.RANDOM = new Random(SEED);
         // create the world with nothing
         SEED = seed;
@@ -138,7 +138,7 @@ public class randomWorld {
 
         // create a room in right up conner
         Position pConner = new Position(71, 21);
-        createRoom(pConner);
+        createRoom(pConner, randomTiles);
         for (int i = 0; i < RandomUtils.uniform(RANDOM, 30, 40); i++) {
             // generate random position
             Position p = generatePositionForRoom();
@@ -148,7 +148,7 @@ public class randomWorld {
                 }
             }
             // create random room
-            Room room = new Room(p, seed);
+            Room room = new Room(p, seed, randomTiles);
             // save the room
             room.saveRoomToRooms();
         }
@@ -192,10 +192,10 @@ public class randomWorld {
         // use Kruskal to generate spt
         TreeSet<edge> edges = Graph.KruskalToGenerateMst();
         for (edge e : edges) {
-            Room.edgeTo(e.p, e.p1);
+            Room.edgeTo(e.p, e.p1, randomTiles);
         }
 
-        addWall();
+        addWall(randomTiles);
         //ter.renderFrame(randomTiles);
     }
 

@@ -53,8 +53,9 @@ public class Engine {
         if (input.charAt(0) == 'n' && input.charAt(input.length() - 1) == 's') {
             seed = Long.parseLong((input.substring(1, input.length() - 1)));
             randomWorld randomWorld = new randomWorld(seed);
+            TETile[][] finalWorldFrame = randomWorld.randomTiles;
+            return finalWorldFrame;
         }
-        TETile[][] finalWorldFrame = randomWorld.randomTiles;
-        return finalWorldFrame;
+        return null;
     }
 }

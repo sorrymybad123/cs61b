@@ -1,5 +1,6 @@
 package byow.Core;
 
+import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
 import java.util.*;
@@ -29,12 +30,12 @@ public class Room {
      * room constructor
      * @param p
      */
-    public Room(Position p, long seed) {
+    public Room(Position p, long seed, TETile[][] randomTiles) {
         RANDOM = new Random(seed);
         boolean roomCreated = false;
         // determine whether we need to do it again
         while (!roomCreated) {
-            roomCreated = createRandomRectangle(p);
+            roomCreated = createRandomRectangle(p, randomTiles);
             if (!roomCreated) {
                 p = generatePositionForRoom();
             }
@@ -87,7 +88,7 @@ public class Room {
     /**
      * make a hallway of liner
      */
-    public static void makeHallwayLiner(Position p, Position p1) {
+    public static void makeHallwayLiner(Position p, Position p1, TETile[][] randomTiles) {
         if (p.y != p1.y) {
             return;
         }
@@ -109,7 +110,7 @@ public class Room {
 
         for (int i = x; i < rightX; i++) {
         // put the floor in the randomTiles
-            randomWorld.randomTiles[i][p.y] = Tileset.FLOOR;
+            randomTiles[i][p.y] = Tileset.FLOOR;
         }
 
     }
@@ -121,7 +122,7 @@ public class Room {
     /**
      * make a vertical hallWay
      */
-    public static void makeVerticalHallway(Position p, Position p1) {
+    public static void makeVerticalHallway(Position p, Position p1, TETile[][] randomTiles) {
         if (!(p.x == p1.x)) {
             return;
         }
@@ -133,7 +134,7 @@ public class Room {
         originY = Math.min(p.y, p1.y);
 
         for (int i = originY; i < rightY + originY + 1; i++) {
-            randomWorld.randomTiles[originX][i] = Tileset.FLOOR;
+            randomTiles[originX][i] = Tileset.FLOOR;
         }
     }
 
@@ -141,10 +142,10 @@ public class Room {
     /**
      * make a bias hallWay
      */
-    public static void makeBiasHallWay(Position p, Position p1) {
+    public static void makeBiasHallWay(Position p, Position p1, TETile[][] randomTiles) {
         Position intersection = new Position(p.x, p1.y);
-        makeVerticalHallway(p, intersection);
-        makeHallwayLiner(p1, intersection);
+        makeVerticalHallway(p, intersection, randomTiles);
+        makeHallwayLiner(p1, intersection, randomTiles);
     }
 
     /**
@@ -156,17 +157,17 @@ public class Room {
     /**
      * room to other room
      */
-    public static void edgeTo(Position thisPosition, Position otherPosition) {
+    public static void edgeTo(Position thisPosition, Position otherPosition, TETile[][] randomTiles) {
 
         // it is vertical
         if (thisPosition.x == otherPosition.x && thisPosition.y != otherPosition.y) {
-            makeVerticalHallway(thisPosition, otherPosition);
+            makeVerticalHallway(thisPosition, otherPosition, randomTiles);
         // it is linear
         } else if (thisPosition.x != otherPosition.x && thisPosition.y == otherPosition.y) {
-            makeHallwayLiner(thisPosition, otherPosition);
+            makeHallwayLiner(thisPosition, otherPosition, randomTiles);
         // it is bias
         } else {
-           makeBiasHallWay(thisPosition, otherPosition);
+           makeBiasHallWay(thisPosition, otherPosition, randomTiles);
         }
 
 
@@ -174,7 +175,7 @@ public class Room {
     }
 
 
-    public boolean createRandomRectangle(Position p) {
+    public boolean createRandomRectangle(Position p, TETile[][] randomTiles) {
         width = RandomUtils.uniform(RANDOM, MINLength, MAXLength);
         height = RandomUtils.uniform(RANDOM, MINLength, MAXLength);
 
@@ -194,7 +195,7 @@ public class Room {
 
         for (int i = p.x; i <  rightX; i++) {
             for (int j = p.y; j < bottomY; j++) {
-                randomWorld.randomTiles[i][j] = Tileset.FLOOR;
+                randomTiles[i][j] = Tileset.FLOOR;
                 Position position = new Position(i, j);
                 roomsPositions.add(position);
             }
