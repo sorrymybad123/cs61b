@@ -28,7 +28,7 @@ public class MemoryGame {
                                                    "You got this!", "You're a star!", "Go Bears!",
                                                    "Too easy for you!", "Wow, so impressive!"};
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         if (args.length < 1) {
             System.out.println("Please enter a seed");
             return;
@@ -36,6 +36,7 @@ public class MemoryGame {
 
         long seed = Long.parseLong(args[0]);
         MemoryGame game = new MemoryGame(40, 40, seed);
+
         game.startGame();
     }
 
@@ -53,30 +54,100 @@ public class MemoryGame {
         StdDraw.clear(Color.BLACK);
         StdDraw.enableDoubleBuffering();
 
-        //TODO: Initialize random number generator
+        // Initialize random number generator
+        rand = new Random(seed);
+
     }
 
     public String generateRandomString(int n) {
         //TODO: Generate random string of letters of length n
-        return null;
+        if (n <= 0) {
+            return null;
+        }
+
+        String randomString = "";
+        // get the char in CHARACTERS
+        for (int i = 0; i < n; i++) {
+            int randomCharSerial = RandomUtils.uniform(rand, CHARACTERS.length);
+            randomString += CHARACTERS[randomCharSerial];
+        }
+
+        return randomString;
     }
 
     public void drawFrame(String s) {
-        //TODO: Take the string and display it in the center of the screen
-        //TODO: If game is not over, display relevant game information at the top of the screen
+        // Take the string and display it in the center of the screen
+        StdDraw.clear();
+        StdDraw.text(20, 20, s);
+        // If game is not over, display relevant game information at the top of the screen
+        if (gameOver == false) {
+           int index = RandomUtils.uniform(rand, 0, ENCOURAGEMENT.length);
+           StdDraw.text(32, 38, ENCOURAGEMENT[index]);
+           StdDraw.text(20, 38, "Round: " + round);
+           StdDraw.text(3, 38, "Watch!");
+        }
+        StdDraw.show();
     }
 
-    public void flashSequence(String letters) {
-        //TODO: Display each character in letters, making sure to blank the screen between letters
+    public void flashSequence(String letters) throws InterruptedException {
+        // Display each character in letters, making sure to blank the screen between letters
+        for (char c : letters.toCharArray()) {
+            StdDraw.pause(500);
+            drawFrame(Character.toString(c));
+            StdDraw.pause(1000);
+        }
+        StdDraw.clear(Color.BLACK);
     }
 
     public String solicitNCharsInput(int n) {
-        //TODO: Read n letters of player input
-        return null;
+        //Read n letters of player input
+        StringBuilder inputBuilder = new StringBuilder();
+        while (inputBuilder.length() < n) {
+            if (StdDraw.hasNextKeyTyped()) {
+                char key = StdDraw.nextKeyTyped();
+                inputBuilder.append(key);
+            }
+        }
+        playerTurn = false;
+        return inputBuilder.toString();
     }
 
-    public void startGame() {
+    public void startGame() throws InterruptedException {
         //TODO: Set any relevant variables before the game starts
+        round = 1;
+        String randomString = "";
+        String inputString = "";
+        int numOfString;
+        while (true) {
+            gameOver = false;
+            StdDraw.clear();
+            StdDraw.text(20, 20, "Round: " + round);
+            StdDraw.show();
+            Thread.sleep(1000);
+            StdDraw.clear();
+            numOfString = RandomUtils.uniform(rand, 1, 5);
+            // randomly generate a target string
+            randomString = generateRandomString(numOfString);
+            // display target string on screen one character at a time
+            flashSequence(randomString);
+            StdDraw.clear(Color.BLACK);
+            // Wait for player input until they type in as many characters as there are in the target
+            playerTurn = true;
+            if (playerTurn == true) {
+                inputString = solicitNCharsInput(numOfString);
+            }
+            System.out.println(inputString);
+            System.out.println(randomString);
+
+            if (!inputString.equals(randomString)) {
+                gameOver = true;
+                StdDraw.clear();
+                StdDraw.text(20, 20, "Game Over You made it to round: " + round);
+                StdDraw.show();
+                break;
+            }
+            round++;
+        }
 
         //TODO: Establish Engine loop
     }

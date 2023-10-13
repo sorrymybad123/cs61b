@@ -107,10 +107,20 @@ public class randomWorld {
     }
 
     /**
+     * create room
+     */
+    public void createRoom(Position p) {
+        Room roomConner = new Room(p, SEED);
+        roomConner.saveRoomToRooms();
+    }
+
+    /**
      * generate Position For Room
      */
     private Position generatePositionForRoom() {
-        return new Position(RandomUtils.uniform(RANDOM,1,  Engine.WIDTH - 9), RandomUtils.uniform(RANDOM,1,  Engine.HEIGHT - 9));
+        int x = RandomUtils.uniform(RANDOM, 1, WIDTH - 9);
+        int y = RandomUtils.uniform(RANDOM,1, HEIGHT - 9);
+        return new Position(x, y);
     }
 
     /**
@@ -126,6 +136,9 @@ public class randomWorld {
         fillWithNothingTiles(randomTiles);
 
 
+        // create a room in right up conner
+        Position pConner = new Position(71, 21);
+        createRoom(pConner);
         for (int i = 0; i < RandomUtils.uniform(RANDOM, 30, 40); i++) {
             // generate random position
             Position p = generatePositionForRoom();
