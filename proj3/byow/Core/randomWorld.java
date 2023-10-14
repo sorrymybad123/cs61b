@@ -127,21 +127,21 @@ public class randomWorld {
      */
     public randomWorld(long seed) {
 
-        randomTiles = new TETile[WIDTH][HEIGHT];
+        SEED = seed;
+        this.randomTiles = new TETile[WIDTH][HEIGHT];
         this.RANDOM = new Random(SEED);
         // create the world with nothing
-        SEED = seed;
-        //TERenderer ter = new TERenderer();
-        //ter.initialize(WIDTH, HEIGHT);
+        // TERenderer ter = new TERenderer();
+        // ter.initialize(WIDTH, HEIGHT);
         fillWithNothingTiles(randomTiles);
-
 
         // create a room in right up conner
         Position pConner = new Position(71, 21);
-        createRoom(pConner, randomTiles);
-        for (int i = 0; i < RandomUtils.uniform(RANDOM, 30, 40); i++) {
+        Room roomConner = new Room(pConner, SEED, randomTiles);
+        roomConner.saveRoomToRooms();
+        for (int i = 0; i < RandomUtils.uniform(RANDOM, 34, 35); i++) {
             // generate random position
-            Position p = generatePositionForRoom();
+            Position p = roomConner.generatePositionForRoom();
             for (Room room : Room.rooms) {
                 while (Position.getDistanceByPosition(p, room.p) < 15) {
                    p = generatePositionForRoom();
@@ -180,7 +180,6 @@ public class randomWorld {
                 if (alreadyUsedRoom.contains(adjacentRoom)) {
                     continue;
                 }
-                alreadyUsedRoom.contains(adjacentRoom);
                 // add edge to the graph
                 Graph.addEdge(e);
                 //Room.edgeTo(e.p1, e.p);

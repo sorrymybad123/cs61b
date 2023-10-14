@@ -52,10 +52,10 @@ public class Engine {
         long seed;
         if (input.charAt(0) == 'n' && input.charAt(input.length() - 1) == 's') {
             seed = Long.parseLong((input.substring(1, input.length() - 1)));
-            // ter.initialize(WIDTH, HEIGHT);
             randomWorld randomWorld = new randomWorld(seed);
+            ter.initialize(WIDTH, HEIGHT);
             TETile[][] finalWorldFrame = randomWorld.randomTiles;
-            // ter.renderFrame(finalWorldFrame);
+            ter.renderFrame(finalWorldFrame);
             return finalWorldFrame;
         }
         return null;

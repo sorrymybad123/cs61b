@@ -9,10 +9,11 @@ import java.util.*;
  *  create room for the world
  */
 public class Room {
-    private static final int MAXLength = 8;
+    private static final int MAXLength = 4;
     private static final int MINLength = 2;
 
-    private static final int thresholdOfAdjacentRooms = 30;
+    private static final int thresholdOfAdjacentRooms = (MINLength + MINLength) * 2;
+    private static final int thresholdOfAdjacentRooms_no =  100*thresholdOfAdjacentRooms;
     private static HashSet<Position> roomsPositions = new HashSet<>();
     public static List<Room> rooms = new ArrayList<>();
 
@@ -58,7 +59,7 @@ public class Room {
 
         for (Room otherRoom : rooms) {
             double distance = this.getDistanceBetween(otherRoom);
-            if (distance < thresholdOfAdjacentRooms && distance != 0) {
+            if (distance < thresholdOfAdjacentRooms_no && distance != 0) {
                 // not itself
                 adjacentRooms.add(otherRoom);
             }
@@ -67,12 +68,37 @@ public class Room {
     }
 
 
+    /**
+     * 生成远离现有房间的随机位置
+     */
+    public Position generateFarPositionForRoom() {
+        Position position;
+        boolean isFarEnough;
+        do {
+            position = generatePositionForRoom();
+            isFarEnough = checkIfFarEnough(position, rooms);
+        } while (!isFarEnough);
+        return position;
+    }
+
+    /**
+     * 检查新生成的房间是否远离现有房间
+     */
+    private static boolean checkIfFarEnough(Position newPosition, List<Room> existingRooms) {
+        for (Room room : existingRooms) {
+            if (Position.getDistanceByPosition(newPosition, room.p) < thresholdOfAdjacentRooms) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /**
      * generate a point
      */
     public  Position generatePositionForRoom() {
-        return new Position(RandomUtils.uniform(RANDOM,1,  Engine.WIDTH - 9), RandomUtils.uniform(RANDOM,1,  Engine.HEIGHT - 9));
+        return new Position(RandomUtils.uniform(RANDOM,1 + MINLength,  Engine.WIDTH - MAXLength - 1), RandomUtils.uniform(RANDOM,1 + MINLength,  Engine.HEIGHT - MAXLength - 1));
     }
 
 
@@ -181,6 +207,7 @@ public class Room {
 
         int rightX = p.x + width - 1;
         int bottomY = p.y + height - 1;
+
 
         door = new Position(RandomUtils.uniform(RANDOM, p.x, rightX),RandomUtils.uniform(RANDOM, p.y, bottomY));
         // test the last rectangle if it is overlap
