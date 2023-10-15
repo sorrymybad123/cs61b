@@ -29,10 +29,7 @@ public class MemoryGame {
                                                    "Too easy for you!", "Wow, so impressive!"};
 
     public static void main(String[] args) throws InterruptedException {
-        if (args.length < 1) {
-            System.out.println("Please enter a seed");
-            return;
-        }
+
 
         long seed = Long.parseLong(args[0]);
         MemoryGame game = new MemoryGame(40, 40, seed);
@@ -53,6 +50,9 @@ public class MemoryGame {
         StdDraw.setYscale(0, this.height);
         StdDraw.clear(Color.BLACK);
         StdDraw.enableDoubleBuffering();
+
+        StdDraw.text(20, 20, "Please input a string: ");
+        StdDraw.show();
 
         // Initialize random number generator
         rand = new Random(seed);
@@ -98,7 +98,17 @@ public class MemoryGame {
         }
         StdDraw.clear(Color.BLACK);
     }
-
+    public static String solicitStartNCharsInput(int n) {
+        //Read n letters of player input
+        StringBuilder inputBuilder = new StringBuilder();
+        while (inputBuilder.length() < n) {
+            if (StdDraw.hasNextKeyTyped()) {
+                char key = StdDraw.nextKeyTyped();
+                inputBuilder.append(key);
+            }
+        }
+        return inputBuilder.toString();
+    }
     public String solicitNCharsInput(int n) {
         //Read n letters of player input
         StringBuilder inputBuilder = new StringBuilder();

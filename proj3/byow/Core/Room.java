@@ -9,8 +9,8 @@ import java.util.*;
  *  create room for the world
  */
 public class Room {
-    private static final int MAXLength = 4;
-    private static final int MINLength = 2;
+    public static final int MAXLength = 4;
+    public static final int MINLength = 2;
 
     private static final int thresholdOfAdjacentRooms = (MINLength + MINLength) * 2;
     private static final int thresholdOfAdjacentRooms_no =  100*thresholdOfAdjacentRooms;

@@ -18,6 +18,7 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+
     }
 
     /**
@@ -52,10 +53,10 @@ public class Engine {
         long seed;
         if (input.charAt(0) == 'n' && input.charAt(input.length() - 1) == 's') {
             seed = Long.parseLong((input.substring(1, input.length() - 1)));
-            randomWorld randomWorld = new randomWorld(seed);
-            //ter.initialize(WIDTH, HEIGHT);
-            TETile[][] finalWorldFrame = randomWorld.randomTiles;
-            //ter.renderFrame(finalWorldFrame);
+            TETile[][] finalWorldFrame =  new TETile[WIDTH][HEIGHT];
+            randomWorld randomWorld = new randomWorld(seed, finalWorldFrame);
+            ter.initialize(WIDTH, HEIGHT);
+            ter.renderFrame(finalWorldFrame);
             return finalWorldFrame;
         }
         return null;

@@ -3,10 +3,7 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Draws a world that contains RANDOM tiles.
@@ -14,6 +11,12 @@ import java.util.TreeSet;
 public class randomWorld {
     private static final int WIDTH = Engine.WIDTH;
     private static final int HEIGHT = Engine.HEIGHT;
+
+    private static final int partitionWidth = WIDTH - 1 / Room.MAXLength;
+
+    private static final int partitionHeight = HEIGHT - 1 / Room.MAXLength;
+
+    public  List<Position> partitionsPositions;
 
     private long SEED;
     public  Random RANDOM;
@@ -94,8 +97,8 @@ public class randomWorld {
      * if a position is nothing add it with wall
      */
     private static void addWall(TETile[][] randomTiles) {
-        for (int x = 0; x < WIDTH; x += 1) {
-            for (int y = 0; y < HEIGHT; y += 1) {
+        for (int x = 0; x < WIDTH - 1; x += 1) {
+            for (int y = 0; y < HEIGHT - 1; y += 1) {
                 if (randomTiles[x][y].equals(Tileset.FLOOR)) {
                     // fill the wall around for this floor
                     Position p = new Position(x, y);
@@ -114,6 +117,21 @@ public class randomWorld {
     }
 
     /**
+     * partition
+     */
+    public void setPartitionsPositions(int width, int height) {
+        partitionsPositions = new ArrayList<>();
+        int addWidth =  Math.round(width / partitionWidth);
+        int addHeight = Math.round(height / partitionHeight);
+        for (int x = 1; x < WIDTH; x+=addWidth) {
+            for (int y = 1; y < HEIGHT; y+=addHeight) {
+                Position p = new Position(x, y);
+                partitionsPositions.add(p);
+            }
+        }
+    }
+
+    /**
      * generate Position For Room
      */
     private Position generatePositionForRoom() {
@@ -125,33 +143,43 @@ public class randomWorld {
     /**
      * create the world
      */
-    public randomWorld(long seed) {
+    public randomWorld(long seed, TETile[][] randomTiles) {
 
         SEED = seed;
-        this.randomTiles = new TETile[WIDTH][HEIGHT];
+        this.randomTiles = randomTiles;
         this.RANDOM = new Random(SEED);
         // create the world with nothing
         // TERenderer ter = new TERenderer();
         // ter.initialize(WIDTH, HEIGHT);
         fillWithNothingTiles(randomTiles);
+        // TODO partition this world
+        setPartitionsPositions(WIDTH, HEIGHT);
 
-        // create a room in right up conner
-        Position pConner = new Position(71, 21);
-        Room roomConner = new Room(pConner, SEED, randomTiles);
-        roomConner.saveRoomToRooms();
-        for (int i = 0; i < RandomUtils.uniform(RANDOM, 34, 35); i++) {
-            // generate random position
-            Position p = roomConner.generatePositionForRoom();
-            for (Room room : Room.rooms) {
-                while (Position.getDistanceByPosition(p, room.p) < 15) {
-                   p = generatePositionForRoom();
-                }
-            }
-            // create random room
+        for (int i = 0; i < 30; i++) {
+            int randomIndex = RandomUtils.uniform(RANDOM, 0 , partitionsPositions.size());
+            Position p = partitionsPositions.remove(randomIndex);
             Room room = new Room(p, seed, randomTiles);
-            // save the room
             room.saveRoomToRooms();
         }
+
+
+        // create a room in right up conner
+//        Position pConner = new Position(71, 21);
+//        Room roomConner = new Room(pConner, SEED, randomTiles);
+//        roomConner.saveRoomToRooms();
+//        for (int i = 0; i < RandomUtils.uniform(RANDOM, 34, 35); i++) {
+//            // generate random position
+//            Position p = roomConner.generatePositionForRoom();
+//            for (Room room : Room.rooms) {
+//                while (Position.getDistanceByPosition(p, room.p) < 15) {
+//                   p = generatePositionForRoom();
+//                }
+//            }
+//            // create random room
+//            Room room = new Room(p, seed, randomTiles);
+//            // save the room
+//            room.saveRoomToRooms();
+//        }
 
 
 //        Position p = new Position(3, 3);
